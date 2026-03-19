@@ -9,6 +9,4 @@ terraform {
   }
 }
 
-provider "databricks" {
-  profile = var.databricks_profile != "" ? var.databricks_profile : null
-}
+provider "databricks" {}
