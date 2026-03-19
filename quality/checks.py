@@ -27,7 +27,7 @@ Design principles:
 
 # COMMAND ----------
 
-from __future__ import annotations
+# Imports
 from pyspark.sql import DataFrame
 from pyspark.sql import functions as F
 

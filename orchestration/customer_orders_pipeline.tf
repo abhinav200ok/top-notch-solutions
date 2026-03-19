@@ -48,7 +48,7 @@ resource "databricks_job" "customer_orders_pipeline" {
     environment_key = var.serverless_environment_key
 
     notebook_task {
-      notebook_path = "transforms/stg_orders.py"
+      notebook_path = "transforms/stg_orders"
       source        = "GIT"
       base_parameters = {
         source_path  = "${var.raw_base_path}/raw_orders.csv"
@@ -70,7 +70,7 @@ resource "databricks_job" "customer_orders_pipeline" {
     environment_key = var.serverless_environment_key
 
     notebook_task {
-      notebook_path = "transforms/stg_customers.py"
+      notebook_path = "transforms/stg_customers"
       source        = "GIT"
       base_parameters = {
         source_path  = "${var.raw_base_path}/raw_customers.csv"
@@ -99,7 +99,7 @@ resource "databricks_job" "customer_orders_pipeline" {
     }
 
     notebook_task {
-      notebook_path = "transforms/int_orders_enriched.py"
+      notebook_path = "transforms/int_orders_enriched"
       source        = "GIT"
       base_parameters = {
         stg_orders_table    = local.tables.stg_orders
@@ -126,7 +126,7 @@ resource "databricks_job" "customer_orders_pipeline" {
     }
 
     notebook_task {
-      notebook_path = "transforms/customer_orders.py"
+      notebook_path = "transforms/customer_orders"
       source        = "GIT"
       base_parameters = {
         int_orders_table = local.tables.int_orders_enriched
@@ -155,7 +155,7 @@ resource "databricks_job" "customer_orders_pipeline" {
     }
 
     notebook_task {
-      notebook_path = "quality/checks.py"
+      notebook_path = "quality/checks"
       source        = "GIT"
       base_parameters = {
         stg_orders_table      = local.tables.stg_orders

@@ -20,18 +20,14 @@ Design principles:
 # COMMAND ----------
 
 # Imports
-from __future__ import annotations
-from typing import Any
-from pyspark.sql import functions as F
-from common import from_csv_read_transform_write
 import logging
+from pyspark.sql import DataFrame, functions as F
+from common import from_csv_read_transform_write
 
 # COMMAND ----------
 
 # Other configurations
 logging.basicConfig(level=logging.INFO, force=True)
-
-DataFrame = Any
 
 # COMMAND ----------
 

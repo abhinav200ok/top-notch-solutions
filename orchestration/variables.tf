@@ -44,7 +44,7 @@ variable "raw_base_path" {
 variable "job_git_repo_url" {
   description = "Public Git repository URL that Databricks Jobs pulls code from."
   type        = string
-  default     = "https://github.com/abhinav200ok/top-notch-solutions"
+  default     = "https://github.com/abhinav200ok/top-notch-solutions.git"
 }
 
 variable "job_git_provider" {
