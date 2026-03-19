@@ -29,7 +29,6 @@ Key aggregation decisions:
 # COMMAND ----------
 
 # Imports
-from __future__ import annotations
 import logging
 from pyspark.sql import DataFrame
 from pyspark.sql import functions as F
