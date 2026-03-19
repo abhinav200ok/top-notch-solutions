@@ -1,0 +1,17 @@
+name: Install tfcmt
+description: Install a pinned tfcmt binary on the runner
+
+inputs:
+  version:
+    description: tfcmt version to install
+    required: true
+
+runs:
+  using: composite
+  steps:
+    - name: Download tfcmt
+      shell: bash
+      run: |
+        curl -fsSL -o /tmp/tfcmt.tar.gz "https://github.com/suzuki-shunsuke/tfcmt/releases/download/v${{ inputs.version }}/tfcmt_linux_amd64.tar.gz"
+        tar -xzf /tmp/tfcmt.tar.gz -C /tmp
+        install /tmp/tfcmt /usr/local/bin/tfcmt
