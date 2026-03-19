@@ -1,7 +1,13 @@
 
 resource "databricks_job" "customer_orders_pipeline" {
-  name               = var.job_name
+  name               = "top-notch-solutions-customer-orders-pipeline"
   performance_target = "PERFORMANCE_OPTIMIZED"
+
+  git_source {
+    url      = var.job_git_repo_url
+    provider = var.job_git_provider
+    branch   = var.job_git_branch
+  }
 
   environment {
     environment_key = var.serverless_environment_key
@@ -42,8 +48,8 @@ resource "databricks_job" "customer_orders_pipeline" {
     environment_key = var.serverless_environment_key
 
     notebook_task {
-      #TODO: Use direct git references instead of hardcoding the notebook path
-      notebook_path = "${var.notebook_base}/transforms/stg_orders"
+      notebook_path = "transforms/stg_orders.py"
+      source        = "GIT"
       base_parameters = {
         source_path  = "${var.raw_base_path}/raw_orders.csv"
         target_table = local.tables.stg_orders
@@ -64,7 +70,8 @@ resource "databricks_job" "customer_orders_pipeline" {
     environment_key = var.serverless_environment_key
 
     notebook_task {
-      notebook_path = "${var.notebook_base}/transforms/stg_customers"
+      notebook_path = "transforms/stg_customers.py"
+      source        = "GIT"
       base_parameters = {
         source_path  = "${var.raw_base_path}/raw_customers.csv"
         target_table = local.tables.stg_customers
@@ -92,7 +99,8 @@ resource "databricks_job" "customer_orders_pipeline" {
     }
 
     notebook_task {
-      notebook_path = "${var.notebook_base}/transforms/int_orders_enriched"
+      notebook_path = "transforms/int_orders_enriched.py"
+      source        = "GIT"
       base_parameters = {
         stg_orders_table    = local.tables.stg_orders
         stg_customers_table = local.tables.stg_customers
@@ -118,7 +126,8 @@ resource "databricks_job" "customer_orders_pipeline" {
     }
 
     notebook_task {
-      notebook_path = "${var.notebook_base}/transforms/customer_orders"
+      notebook_path = "transforms/customer_orders.py"
+      source        = "GIT"
       base_parameters = {
         int_orders_table = local.tables.int_orders_enriched
         target_table     = local.tables.customer_orders
@@ -146,7 +155,8 @@ resource "databricks_job" "customer_orders_pipeline" {
     }
 
     notebook_task {
-      notebook_path = "${var.notebook_base}/quality/checks"
+      notebook_path = "quality/checks.py"
+      source        = "GIT"
       base_parameters = {
         stg_orders_table      = local.tables.stg_orders
         customer_orders_table = local.tables.customer_orders

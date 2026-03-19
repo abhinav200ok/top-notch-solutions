@@ -1,17 +1,4 @@
 # Hardcoding values for simplicity, real world usage would be more dynamic
-variable "databricks_profile" {
-  description = "Optional Databricks CLI profile name from ~/.databrickscfg. Leave null to use the default Databricks authentication resolution."
-  type        = string
-  default     = "main"
-  nullable    = true
-}
-
-variable "job_name" {
-  description = "Display name for the Databricks job."
-  type        = string
-  default     = "top-notch-solutions-customer-orders-pipeline"
-}
-
 variable "serverless_environment_key" {
   description = "Shared serverless environment key referenced by all notebook tasks in the job."
   type        = string
@@ -54,11 +41,22 @@ variable "raw_base_path" {
   default     = "/Volumes/top_notch_solutions/raw/customers_and_orders_data"
 }
 
-#TODO: Use direct git references instead of hardcoding the notebook path
-variable "notebook_base" {
-  description = "Absolute shared Databricks Repos path that contains the project notebooks."
+variable "job_git_repo_url" {
+  description = "Public Git repository URL that Databricks Jobs pulls code from."
   type        = string
-  default     = "/Workspace/top_notch_solutions/top-notch-solutions"
+  default     = "https://github.com/abhinav200ok/top-notch-solutions"
+}
+
+variable "job_git_provider" {
+  description = "Git provider name understood by Databricks Jobs."
+  type        = string
+  default     = "gitHub"
+}
+
+variable "job_git_branch" {
+  description = "Git branch that Databricks Jobs should run notebooks from."
+  type        = string
+  default     = "main"
 }
 
 variable "owner_email" {
