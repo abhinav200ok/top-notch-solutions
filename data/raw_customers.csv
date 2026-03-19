@@ -1,0 +1,10 @@
+customer_id,first_name,last_name,email,signup_date,tier
+C001,Alice,Smith,alice@example.com,2024-06-01,gold
+C002,Bob,Jones,bob@example.com,2024-07-15,silver
+C003,Clara,Müller,clara@example.com,2024-08-20,gold
+C004,David,Kim,david@example.com,2024-09-01,bronze
+C005,Eva,Rossi,eva@example.com,2024-09-10,silver
+C006,Frank,Dubois,frank@example.com,2024-10-05,bronze
+C007,Grace,Tanaka,grace@example.com,2024-11-01,gold
+C008,Hugo,Patel,hugo@example.com,2024-11-20,silver
+C009,Irina,Novak,irina@example.com,2024-12-01,bronze

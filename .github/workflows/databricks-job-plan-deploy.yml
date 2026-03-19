@@ -1,0 +1,101 @@
+# Minimal GitHub Actions workflow, real world usage would include more steps such as linting, testing, and security scanning
+name: Databricks Job Plan and Deploy
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - orchestration/**
+      - .github/workflows/databricks-job-plan-deploy.yml
+  push:
+    branches:
+      - main
+    paths:
+      - orchestration/**
+      - .github/workflows/databricks-job-plan-deploy.yml
+
+permissions:
+  contents: read
+  issues: write
+  pull-requests: write
+
+env:
+  DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
+  DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
+  DATABRICKS_AUTH_TYPE: pat
+  TF_TOKEN_app_terraform_io: ${{ secrets.HCP_TERRAFORM_TOKEN }}
+  GITHUB_TOKEN: ${{ github.token }}
+  TFCMT_DISABLE_LABEL: "true"
+  TF_IN_AUTOMATION: "true"
+  TFCMT_VERSION: 4.14.15
+
+defaults:
+  run:
+    shell: bash
+    working-directory: orchestration
+
+concurrency:
+  group: databricks-job-plan-deploy-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  plan:
+    name: Terraform Plan
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Terraform
+        uses: hashicorp/setup-terraform@v3
+
+      - name: Install tfcmt
+        uses: ./.github/actions/install-tfcmt
+        with:
+          version: ${{ env.TFCMT_VERSION }}
+
+      - name: Terraform init
+        run: terraform init -input=false
+
+      - name: Terraform fmt check
+        run: terraform fmt -check -recursive
+
+      - name: Terraform validate
+        run: terraform validate
+
+      - name: Terraform plan
+        run: tfcmt plan -patch -- terraform plan -input=false -no-color -out=tfplan
+
+      - name: Upload plan artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: databricks-job-plan
+          path: orchestration/tfplan
+          if-no-files-found: error
+
+  apply:
+    name: Terraform Apply
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Terraform
+        uses: hashicorp/setup-terraform@v3
+
+      - name: Install tfcmt
+        uses: ./.github/actions/install-tfcmt
+        with:
+          version: ${{ env.TFCMT_VERSION }}
+
+      - name: Terraform init
+        run: terraform init -input=false
+
+      - name: Terraform validate
+        run: terraform validate
+
+      - name: Terraform apply
+        run: tfcmt apply -- terraform apply -input=false -auto-approve
