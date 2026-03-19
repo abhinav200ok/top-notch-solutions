@@ -15,13 +15,14 @@ Transformations applied:
 
 Design principles:
 - transform() is a pure function (no I/O)
-- from_csv_read_transform_write() is the I/O boundary: read raw, call transform(), write Delta.
+- Code reuse: Helper function from_csv_read_transform_write()
 """
 
 # COMMAND ----------
 
 # Imports
 from __future__ import annotations
+from typing import Any
 from pyspark.sql import functions as F
 import logging
 from common import from_csv_read_transform_write
@@ -31,6 +32,8 @@ from pyspark.sql.types import DoubleType
 
 # Other configurations
 logging.basicConfig(level=logging.INFO, force=True)
+
+DataFrame = Any
 
 # COMMAND ----------
 
@@ -73,5 +76,5 @@ if __name__ == "__main__":
     source_path  = dbutils.widgets.get("source_path")                  
     target_table = dbutils.widgets.get("target_table")                 
 
-    stg_df = from_csv_read_transform_write(source_path, target_table)
+    stg_df = from_csv_read_transform_write(spark, transform, source_path, target_table)
     logging.info(f"stg_orders: {stg_df.count()} rows written to {target_table}")
