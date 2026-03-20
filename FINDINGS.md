@@ -24,6 +24,7 @@ against this.
 **What is the issue?**
 Mixed-case status for order_id 1014 i.e. inconsistent casing
 - All other rows have lowercase status values. Row 1014 uses capital letters i.e. COMPLETED
+
 **Why is it a problem for the pipeline?**
 - String comparisons in Spark are case-sensitive. Without normalisation the string comparison status == 'completed' would return FALSE and would make a completed order invisible for revenue calculation.
 
@@ -39,6 +40,7 @@ Zero amount_usd for order_id 1015
 **Why is it a problem for the pipeline?**
 - It would erroranously inflate completed_orders value thus distorting results.
 - Distort avg_order_value
+
 **How does your pipeline currently handle it?**
 - Filter in filter in stg_orders.transform() also removes Zero value records.
 - data quality check 7 i.e.  (total_revenue > 0)
