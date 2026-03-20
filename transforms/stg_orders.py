@@ -54,10 +54,6 @@ def transform(raw: DataFrame) -> DataFrame:
         .withColumn("order_date", F.to_date(F.col("order_date")))
         .withColumn("order_amount", F.col("order_amount").cast(DoubleType()))
         # 5. Exclude NULL / zero amounts
-        .filter(
-            F.col("order_amount").isNotNull()
-            & (F.col("order_amount") != 0)
-        )
         # 6. Audit timestamp
         .withColumn("loaded_at", F.current_timestamp())
     )
